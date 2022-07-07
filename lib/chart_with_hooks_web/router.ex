@@ -18,6 +18,9 @@ defmodule ChartWithHooksWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    # Live Routes
+    live "/chart", Live.ChartLive
   end
 
   # Other scopes may use custom stacks.
