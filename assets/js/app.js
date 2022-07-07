@@ -26,8 +26,33 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
+
+// Add BarChart
+import BarChart from "./chart.js"
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+
+
+// Create a Hooks instance
+const Hooks = {}
+
+
+// Add a hook for BarChart
+Hooks.BarChart = {
+    mounted() {
+        // Get the canvas element
+        // And the data transmitted by the server
+        // Passing the data to the canvas
+        // data-chart-data={Jason.encode!(@chart_data)}
+        // Then get them as ChartData
+        const {labels, values} = JSON.parse(this.el.dataset.chartData)
+        this.chart = new BarChart(this.el, labels, values)
+    }
+}
+
+
+// Add hooks to the socket
+let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: Hooks})
 
 // Show progress bar on live navigation and form submits
 topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
